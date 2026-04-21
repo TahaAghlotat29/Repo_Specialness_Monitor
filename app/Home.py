@@ -4,6 +4,13 @@ Repo Specialness Monitor
 
 import sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+
+    
 import plotly.graph_objects as go
 import streamlit as st
 from streamlit_option_menu import option_menu
@@ -13,9 +20,7 @@ from src.analytics.specialness_score import load_specialness_score
 from src.analytics.tension_signals import load_tension_signals
 from src.ingestion.ecb_holdings import load_holdings
 
-ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+
 
 
 # Page config 
