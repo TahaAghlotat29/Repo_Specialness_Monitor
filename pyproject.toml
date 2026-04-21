@@ -1,0 +1,24 @@
+[project]
+name = "EUR Repo Collateral Monitor"
+version = "0.1.0"
+description = "Tracking ECB Quantitative Tightening effects on EUR sovereign and Covered repo markets."
+requires-python = ">=3.13"
+dependencies = [
+    "httpx>=0.28.1",
+    "numpy>=2.4.3",
+    "pandas>=2.3.3",
+    "plotly>=6.6.0",
+    "pyarrow>=23.0.1",
+    "python-dateutil>=2.9.0.post0",
+    "requests>=2.32.5",
+    "scikit-learn>=1.8.0",
+    "streamlit>=1.55.0",
+    "streamlit-option-menu>=0.4.0",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.2.0",
+    "jupyter>=1.1.1",
+    "ruff>=0.15.7",
+]
