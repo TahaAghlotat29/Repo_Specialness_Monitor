@@ -1,28 +1,24 @@
 """
-Repo Specialness Monitor — Entry point.
-Horizontal navigation via streamlit-option-menu.
+Repo Specialness Monitor 
 """
 
 import sys
 from pathlib import Path
-
-ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
-
 import plotly.graph_objects as go
 import streamlit as st
 from streamlit_option_menu import option_menu
-
 from app.sections import macro_overview, repo_tension_monitor, specialness_screener
 from src.analytics.free_float import load_free_float
 from src.analytics.specialness_score import load_specialness_score
 from src.analytics.tension_signals import load_tension_signals
 from src.ingestion.ecb_holdings import load_holdings
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-# ---------------------------------------------------------------------
-# Page config (ONCE for the whole app)
+
+# Page config 
 # ---------------------------------------------------------------------
 st.set_page_config(
     page_title="Repo Specialness Monitor",
@@ -30,10 +26,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-
-# ---------------------------------------------------------------------
-# Horizontal navigation menu
-# ---------------------------------------------------------------------
 selected = option_menu(
     menu_title=None,
     options=["Home", "Macro Overview", "Repo Tension", "Specialness Screener"],
@@ -65,8 +57,8 @@ selected = option_menu(
 )
 
 
-# ---------------------------------------------------------------------
-# Home page content
+
+# Home page 
 # ---------------------------------------------------------------------
 def render_home():
     st.title("Repo Specialness Monitor")
@@ -78,8 +70,8 @@ def render_home():
     st.markdown(
         """
         The Eurosystem accumulated massive sovereign bond holdings via the **APP** and
-        **PEPP** purchase programmes between 2015 and 2022. As **quantitative tightening
-        (QT)** unfolds, this collateral progressively returns to the market — reshaping
+        **PEPP** purchase programmes. As **quantitative tightening
+        (QT)** unfolds, this collateral progressively returns to the market and reshapes the
         free float and specialness dynamics across the EUR repo universe.
         """
     )
@@ -93,10 +85,8 @@ def render_home():
 
     latest_date = holdings["date"].max()
 
-    # Total Eurozone holdings (all countries, all programmes)
     total_ez = holdings[holdings["date"] == latest_date]["holdings_eur_bn"].sum()
 
-    # Peak Eurozone holdings
     total_by_date = holdings.groupby("date")["holdings_eur_bn"].sum()
     peak_ez = total_by_date.max()
     peak_date = total_by_date.idxmax()
@@ -119,8 +109,7 @@ def render_home():
 
     st.markdown("---")
 
-    # -------------- Main chart — Eurozone QT story --------------
-    st.subheader("Eurosystem sovereign holdings — the QT story")
+    st.subheader("Eurosystem sovereign holdings")
 
     total_ez_series = (
         holdings.groupby("date", as_index=False)["holdings_eur_bn"].sum()
@@ -128,7 +117,6 @@ def render_home():
 
     fig = go.Figure()
 
-    # Filled area for the whole series
     fig.add_scatter(
         x=total_ez_series["date"],
         y=total_ez_series["holdings_eur_bn"],
@@ -140,7 +128,6 @@ def render_home():
         hovertemplate="<b>%{x|%b %Y}</b><br>%{y:,.0f} bn €<extra></extra>",
     )
 
-    # Annotation on the peak
     fig.add_annotation(
         x=peak_date,
         y=peak_ez,
@@ -155,7 +142,6 @@ def render_home():
         borderwidth=1,
     )
 
-    # Annotation on latest
     fig.add_annotation(
         x=latest_date,
         y=total_ez,
@@ -170,7 +156,6 @@ def render_home():
         borderwidth=1,
     )
 
-    # Shaded QT period (from peak onward)
     fig.add_vrect(
         x0=peak_date,
         x1=latest_date,
@@ -192,7 +177,6 @@ def render_home():
 
     st.markdown("---")
 
-    # -------------- Navigation guide --------------
     st.subheader("Explore further")
     st.markdown(
         """
@@ -208,14 +192,12 @@ def render_home():
     st.markdown("---")
     st.caption(
         f"Data sources: ECB APP/PEPP, €STR, Deposit Facility Rate · "
-        f"Latest observation: {latest_date.date()} · "
-        f"Built with Streamlit"
+        f"Latest observation: {latest_date.date()}  "
+        
     )
 
 
-# ---------------------------------------------------------------------
-# Routing
-# ---------------------------------------------------------------------
+
 if selected == "Home":
     render_home()
 elif selected == "Macro Overview":

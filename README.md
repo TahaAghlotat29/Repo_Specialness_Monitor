@@ -37,6 +37,6 @@ uv run streamlit run app/Home.py
 
 ## Live demo
 
-[Link to deployed dashboard](https://share.streamlit.io/...)
+[Link to deployed dashboard](https://repo-specialness-monitor.streamlit.app/)
 
 ---
